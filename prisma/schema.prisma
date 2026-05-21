@@ -1,0 +1,174 @@
+// Trainly schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         String    // "CLIENT" | "COACH"
+  avatarUrl    String?
+  bio          String?
+  location     String?
+  createdAt    DateTime  @default(now())
+
+  coachProfile  Coach?
+  bookingsAsClient Booking[] @relation("ClientBookings")
+  reviews       Review[]    @relation("ReviewAuthor")
+  messagesFrom  Message[]   @relation("MessageSender")
+  messagesTo    Message[]   @relation("MessageRecipient")
+  favourites    Favourite[]
+  progress      ProgressEntry[]
+  matchAnswers  MatchAnswer[]
+}
+
+model Coach {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug            String   @unique
+  headline        String
+  tagline         String
+  longBio         String
+  heroImageUrl    String
+  galleryUrls     String   // JSON array of URLs
+  yearsExperience Int
+  hourlyRate      Int      // SGD
+  rating          Float    @default(0)
+  reviewCount     Int      @default(0)
+  sessionCount    Int      @default(0)
+  responseTimeMin Int      @default(60)
+  languages       String   // CSV
+  formats         String   // CSV: HOME,GYM,OUTDOOR,VIRTUAL,STUDIO
+  vibeTags        String   // CSV personality/style tags
+  certifications  String   // JSON array of {name, issuer, year}
+  socials         String   // JSON {instagram, tiktok, youtube}
+  isVerified      Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  acceptsHomeVisit Boolean @default(true)
+  travelRadiusKm  Int      @default(8)
+  specialties     CoachSpecialty[]
+  packages        Package[]
+  bookings        Booking[]
+  reviews         Review[]
+  availability    Availability[]
+  favourites      Favourite[]
+}
+
+model Specialty {
+  id      String @id @default(cuid())
+  name    String @unique
+  slug    String @unique
+  icon    String
+  coaches CoachSpecialty[]
+}
+
+model CoachSpecialty {
+  coachId     String
+  specialtyId String
+  coach       Coach     @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  specialty   Specialty @relation(fields: [specialtyId], references: [id], onDelete: Cascade)
+  @@id([coachId, specialtyId])
+}
+
+model Package {
+  id         String   @id @default(cuid())
+  coachId    String
+  coach      Coach    @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  name       String
+  sessions   Int
+  priceSGD   Int
+  description String
+  isMonthly  Boolean  @default(false)
+  bookings   Booking[]
+}
+
+model Availability {
+  id       String @id @default(cuid())
+  coachId  String
+  coach    Coach  @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  weekday  Int    // 0-6
+  startMin Int    // minutes from midnight
+  endMin   Int
+}
+
+model Booking {
+  id          String   @id @default(cuid())
+  clientId    String
+  client      User     @relation("ClientBookings", fields: [clientId], references: [id])
+  coachId     String
+  coach       Coach    @relation(fields: [coachId], references: [id])
+  packageId   String?
+  package     Package? @relation(fields: [packageId], references: [id])
+  startsAt    DateTime
+  endsAt      DateTime
+  format      String   // HOME | GYM | OUTDOOR | VIRTUAL | STUDIO
+  locationNote String?
+  status      String   // PENDING | CONFIRMED | DECLINED | COMPLETED | CANCELLED
+  priceSGD    Int
+  notes       String?
+  createdAt   DateTime @default(now())
+  review      Review?
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  bookingId String?  @unique
+  booking   Booking? @relation(fields: [bookingId], references: [id])
+  coachId   String
+  coach     Coach    @relation(fields: [coachId], references: [id])
+  authorId  String
+  author    User     @relation("ReviewAuthor", fields: [authorId], references: [id])
+  rating    Int
+  body      String
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  senderId    String
+  sender      User     @relation("MessageSender", fields: [senderId], references: [id])
+  recipientId String
+  recipient   User     @relation("MessageRecipient", fields: [recipientId], references: [id])
+  body        String
+  createdAt   DateTime @default(now())
+  readAt      DateTime?
+}
+
+model Favourite {
+  id       String @id @default(cuid())
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coachId  String
+  coach    Coach  @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  @@unique([userId, coachId])
+}
+
+model ProgressEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  metric    String   // weight, mood, energy, painLevel, custom
+  value     Float
+  unit      String?
+  note      String?
+  recordedAt DateTime @default(now())
+}
+
+model MatchAnswer {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  answers   String   // JSON
+  topCoachIds String // CSV
+  createdAt DateTime @default(now())
+}

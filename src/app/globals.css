@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #faf7f2;
+  --ink: #1f1f1d;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer base {
+  body { font-feature-settings: "ss01" on, "cv11" on; }
+  h1, h2, h3, h4 { letter-spacing: -0.015em; }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 font-medium transition disabled:opacity-50 disabled:cursor-not-allowed text-sm;
+  }
+  .btn-primary {
+    @apply btn bg-ink-900 text-cream hover:bg-ink-800 active:scale-[0.98];
+  }
+  .btn-coral {
+    @apply btn bg-coral-500 text-white hover:bg-coral-600 active:scale-[0.98];
+  }
+  .btn-sage {
+    @apply btn bg-sage-600 text-white hover:bg-sage-700 active:scale-[0.98];
+  }
+  .btn-outline {
+    @apply btn bg-white text-ink-900 border border-ink-200 hover:border-ink-400 active:scale-[0.98];
+  }
+  .btn-ghost {
+    @apply btn text-ink-700 hover:bg-ink-100;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-card border border-ink-100/60;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium bg-ink-100 text-ink-700;
+  }
+  .chip-sage {
+    @apply chip bg-sage-100 text-sage-800;
+  }
+  .chip-coral {
+    @apply chip bg-coral-100 text-coral-800;
+  }
+  .input {
+    @apply w-full rounded-xl border border-ink-200 bg-white px-4 py-2.5 text-sm placeholder:text-ink-400 focus:outline-none focus:ring-2 focus:ring-sage-300 focus:border-sage-400;
+  }
+  .label {
+    @apply text-sm font-medium text-ink-800 mb-1.5 block;
+  }
+  .section-title {
+    @apply text-2xl md:text-3xl font-display font-semibold text-ink-900;
+  }
+}
+
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
+}
+
+.scroll-shadow {
+  background:
+    linear-gradient(to right, white 30%, rgba(255,255,255,0)),
+    linear-gradient(to right, rgba(255,255,255,0), white 70%) 100% 0,
+    radial-gradient(farthest-side at 0% 50%, rgba(0,0,0,0.08), rgba(0,0,0,0)),
+    radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.08), rgba(0,0,0,0)) 100% 0;
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float { animation: float 6s ease-in-out infinite; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease-out both; }
