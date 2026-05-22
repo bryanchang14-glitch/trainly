@@ -1,14 +1,23 @@
 import Link from "next/link";
 import { logout } from "@/app/(auth)/actions";
 import type { SessionPayload } from "@/lib/auth";
+import { BrandMark } from "@/components/brand-mark";
 
-export function TopNav({ session }: { session: SessionPayload | null }) {
+export function TopNav({
+  session,
+  brandName = "Trainly",
+  logoUrl,
+}: {
+  session: SessionPayload | null;
+  brandName?: string;
+  logoUrl?: string | null;
+}) {
   return (
     <header className="sticky top-0 z-40 bg-cream/85 backdrop-blur border-b border-ink-100">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-display text-2xl font-semibold tracking-tight">
-          <span className="inline-flex w-8 h-8 rounded-xl bg-gradient-to-br from-sage-500 to-coral-400 items-center justify-center text-white font-bold">T</span>
-          Trainly
+          <BrandMark logoUrl={logoUrl} size="sm" />
+          {brandName}
         </Link>
 
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-ink-700">

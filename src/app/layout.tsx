@@ -19,13 +19,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body className="min-h-screen bg-cream text-ink-900">
-        <TopNav session={session} />
+        <TopNav session={session} brandName={site.brand.name} logoUrl={site.brand.logoUrl} />
         <main className="min-h-[calc(100vh-64px)]">{children}</main>
         <footer className="border-t border-ink-100 mt-24 bg-white">
           <div className="max-w-7xl mx-auto px-6 py-12 grid md:grid-cols-4 gap-8 text-sm text-ink-600">
             <div>
-              <div className="font-display text-2xl font-semibold text-ink-900">Trainly</div>
-              <p className="mt-2">Train how you live. Singapore-based.</p>
+              <div className="font-display text-2xl font-semibold text-ink-900">{site.brand.name}</div>
+              <p className="mt-2">{site.brand.tagline} · Singapore-based.</p>
             </div>
             {cols.map((col) => (
               <div key={col.title}>
