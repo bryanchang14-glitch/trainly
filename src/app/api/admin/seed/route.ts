@@ -24,7 +24,35 @@ const SPECIALTIES = [
   { name: "Kids & Youth", slug: "kids", icon: "🧒" },
 ];
 
-const COACHES = [
+type CoachSeed = {
+  email: string;
+  name: string;
+  slug: string;
+  location: string;
+  avatar: string;
+  hero: string;
+  gallery: string[];
+  headline: string;
+  tagline: string;
+  longBio: string;
+  years: number;
+  hourly: number;
+  rating: number;
+  reviews: number;
+  sessions: number;
+  responseMin: number;
+  languages: string;
+  formats: string;
+  vibe: string;
+  certs: { name: string; issuer: string; year: number }[];
+  socials: { instagram?: string; tiktok?: string; youtube?: string };
+  specialties: string[];
+  featured?: boolean;
+  homeVisit?: boolean;
+  packages: { name: string; sessions: number; price: number; desc: string; monthly?: boolean }[];
+};
+
+const COACHES: CoachSeed[] = [
   {
     email: "aisha@trainly.com", name: "Aisha Rahman", slug: "aisha-rahman", location: "Tanjong Pagar",
     avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",

@@ -37,7 +37,19 @@ type Answers = {
   pace?: string;
 };
 
-const QUESTIONS = [
+type Question = {
+  key: keyof Answers;
+  title: string;
+  sub?: string;
+  type?: "slider";
+  min?: number;
+  max?: number;
+  step?: number;
+  default?: number;
+  options?: { v: string; l: string }[];
+};
+
+const QUESTIONS: Question[] = [
   {
     key: "goal",
     title: "What's your main goal?",
@@ -161,7 +173,7 @@ const QUESTIONS = [
       { v: "intensive", l: "3+ per week / intensive" },
     ],
   },
-] as const;
+];
 
 const LOCATION_MAP: Record<string, string[]> = {
   central: ["Tanjong Pagar", "Tiong Bahru", "Orchard", "Holland", "Bukit Timah"],
