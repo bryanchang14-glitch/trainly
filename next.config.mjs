@@ -6,9 +6,6 @@ const nextConfig = {
       { protocol: "https", hostname: "i.pravatar.cc" },
     ],
   },
-  experimental: {
-    serverActions: { bodySizeLimit: "2mb" },
-  },
 };
 
 export default nextConfig;
